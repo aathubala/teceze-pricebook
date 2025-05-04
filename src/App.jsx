@@ -16,6 +16,9 @@ function App() {
   const [bdResolution, setBdResolution] = useState('');
   const [ticketResolution, setTicketResolution] = useState('');
   const [additionalHours, setAdditionalHours] = useState('');
+  const [visitDayType, setVisitDayType] = useState('');
+  const [additionalKms, setAdditionalKms] = useState('');
+  const [accessCancellationType, setAccessCancellationType] = useState('');
 
   const navigate = useNavigate();
 
@@ -70,9 +73,33 @@ function App() {
   let price = matchedRow && priceKey ? matchedRow[priceKey] : null;
   const currency = matchedRow?.Currency || '';
 
+  // Dispatch Ticket additional hours
   if (selectedMode === 'Dispatch Ticket' && price !== null && additionalHours) {
     const hourlyRate = matchedRow?.DT_HourlyRate || 0;
     price += parseFloat(additionalHours || 0) * parseFloat(hourlyRate);
+  }
+
+  // Day Visit multiplier
+  if (selectedMode === 'Day Visit' && price !== null) {
+    if (visitDayType === 'Weekday-Out of Hours') {
+      price *= 1.5;
+    } else if (visitDayType === 'Weekend') {
+      price *= 2;
+    }
+    // Additional traveled kilometers
+    if (additionalKms && !isNaN(additionalKms)) {
+      price += parseFloat(additionalKms) * 0.4;
+    }
+  }
+
+  // Day Visit multiplier
+  if (selectedMode === 'Day Visit' && price !== null) {
+    if (accessCancellationType === 'Access denied at the visit') {
+      price *= 1;
+    } else if (accessCancellationType === 'Visit cancelled within 24 hours') {
+      price *= 0.5;
+    }
+    
   }
 
   const exportToPDF = () => {
@@ -99,6 +126,8 @@ function App() {
     setBdResolution('');
     setTicketResolution('');
     setAdditionalHours('');
+    setVisitDayType('');
+    setAdditionalKms('');
   };
 
   const styles = {
@@ -214,14 +243,8 @@ function App() {
             value={region}
             onChange={(e) => {
               setRegion(e.target.value);
-              setCountry('');
-              setServiceLevel('');
-              setEngagementType('');
-              setTermLength('');
-              setDayLength('');
-              setBdResolution('');
-              setTicketResolution('');
-              setAdditionalHours('');
+              resetForm();
+              setRegion(e.target.value);
             }}
           />
         </div>
@@ -241,6 +264,8 @@ function App() {
                 setBdResolution('');
                 setTicketResolution('');
                 setAdditionalHours('');
+                setVisitDayType('');
+                setAdditionalKms('');
               }}
             />
           </div>
@@ -293,6 +318,33 @@ function App() {
                 onChange={(e) => setDayLength(e.target.value)}
               />
             </div>
+            <div style={styles.section}>
+              <Dropdown
+                label="Specify the Visit Day"
+                options={['Weekday-Business Hours', 'Weekday-Out of Hours', 'Weekend']}
+                value={visitDayType}
+                onChange={(e) => setVisitDayType(e.target.value)}
+              />
+            </div>
+            <div style={styles.section}>
+              <label>Additional traveled KM more than 50kms</label>
+              <input
+                type="number"
+                min="0"
+                placeholder="Enter additional kilometers"
+                value={additionalKms}
+                onChange={(e) => setAdditionalKms(e.target.value)}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.section}>
+              <Dropdown
+                label="Access Denied / Cancellation Incidents"
+                options={['Access denied at the visit', 'Visit cancelled within 24 hours']}
+                value={accessCancellationType}
+                onChange={(e) => setAccessCancellationType(e.target.value)}
+              />
+            </div>
           </>
         )}
 
@@ -319,7 +371,6 @@ function App() {
                   'NBD Resolution to site',
                   '2 BD Resolution to site',
                   '3 BD Resolution to site'
-      
                 ]}
                 value={ticketResolution}
                 onChange={(e) => setTicketResolution(e.target.value)}
@@ -337,12 +388,11 @@ function App() {
             </div>
           </>
         )}
-        
 
         {price !== undefined && price !== null && (
           <>
             <div id="price-summary" style={styles.priceBox}>
-              💰 Price: {currency} {price.toLocaleString()}
+              💰 Price: {currency} {price.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
               <button style={styles.button} onClick={exportToPDF}>📄 Download PDF</button>
