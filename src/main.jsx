@@ -7,7 +7,7 @@ import Details from './pages/Details.jsx'; // <-- You need to create this file
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/teceze-pricebook/">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/details" element={<Details />} />
