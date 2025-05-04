@@ -53,12 +53,12 @@ function App() {
     }
     if (selectedMode === 'Dispatch Ticket') {
       const map = {
-        '2 BD Resolution to site': 'DT1',
-        '3 BD Resolution to site': 'DT2',
-        '9x5x4 Incident Response': 'DT3',
-        '24x7x4 Response to site': 'DT4',
-        'SBD Business Day Resolution to site': 'DT5',
-        'NBD Resolution to site': 'DT6'
+        '2 BD Resolution to site': 'DT5',
+        '3 BD Resolution to site': 'DT6',
+        '9x5x4 Incident Response': 'DT1',
+        '24x7x4 Response to site': 'DT2',
+        'SBD Business Day Resolution to site': 'DT3',
+        'NBD Resolution to site': 'DT4'
       };
       return map[ticketResolution] || null;
     }
@@ -313,12 +313,13 @@ function App() {
               <Dropdown
                 label="Length of BD Resolution to site"
                 options={[
-                  '2 BD Resolution to site',
-                  '3 BD Resolution to site',
                   '9x5x4 Incident Response',
                   '24x7x4 Response to site',
                   'SBD Business Day Resolution to site',
-                  'NBD Resolution to site'
+                  'NBD Resolution to site',
+                  '2 BD Resolution to site',
+                  '3 BD Resolution to site'
+      
                 ]}
                 value={ticketResolution}
                 onChange={(e) => setTicketResolution(e.target.value)}
