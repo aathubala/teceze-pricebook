@@ -4,6 +4,7 @@ import Dropdown from './components/Dropdown';
 import pricebook from './data/pricebook.json';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import photo1 from "/gallery/background.jpg";
 
 function App() {
   const [selectedMode, setSelectedMode] = useState('Project');
@@ -151,7 +152,7 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
     appContainer: {
       minHeight: '100vh',
       background: 'linear-gradient(135deg,rgb(55, 167, 98),rgb(71, 149, 168))',
-      backgroundImage: 'url("/background.jpg")',
+      backgroundImage: `url(${photo1})`,
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
