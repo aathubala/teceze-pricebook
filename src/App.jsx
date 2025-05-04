@@ -150,7 +150,8 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
   const styles = {
     appContainer: {
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #e0f7fa, #ffffff)',
+      background: 'linear-gradient(135deg,rgb(55, 167, 98),rgb(71, 149, 168))',
+      backgroundImage: 'url("/background.jpg")',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
@@ -168,7 +169,7 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
     topButton: (active) => ({
       padding: '0.6rem 1.2rem',
       fontSize: '1rem',
-      backgroundColor: active ? '#2d6cdf' : '#ccc',
+      backgroundColor: active ? 'green' : '#ccc',
       color: active ? 'white' : '#333',
       border: 'none',
       borderRadius: '6px',
@@ -176,7 +177,7 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
     }),
     card: {
       position: 'relative',
-      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      backgroundColor: 'rgba(98, 194, 102, 0.95)',
       backdropFilter: 'blur(4px)',
       borderRadius: '12px',
       boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
@@ -225,7 +226,7 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
       marginTop: '1rem',
       padding: '0.6rem 1.2rem',
       fontSize: '1rem',
-      backgroundColor: '#2d6cdf',
+      backgroundColor: 'red',
       color: 'white',
       border: 'none',
       borderRadius: '6px',
