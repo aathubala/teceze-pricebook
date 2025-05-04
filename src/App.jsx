@@ -89,13 +89,13 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
 
 
   // Dispatch Ticket additional hours
-  if (selectedMode === 'Dispatch Ticket','Dispatch Ticket', 'Dispatch Pricing' && price !== null && additionalHours) {
+  if (selectedMode ==='Dispatch Ticket' && price !== null && additionalHours) {
     const hourlyRate = matchedRow?.DT_HourlyRate || 0;
     price += parseFloat(additionalHours || 0) * parseFloat(hourlyRate);
   }
 
   // Day Visit multiplier
-  if (selectedMode === 'Day Visit','Dispatch Ticket', 'Dispatch Pricing' && price !== null) {
+  if (selectedMode === 'Day Visit' || selectedMode ==='Dispatch Ticket' || selectedMode ==='Dispatch Pricing' && price !== null) {
     if (visitDayType === 'Weekday-Out of Hours') {
       price *= 1.5;
     } else if (visitDayType === 'Weekend') {
@@ -108,7 +108,7 @@ if (selectedMode === 'Project' && price !== null && projectMonths) {
   }
 
   // Day Visit multiplier
-  if (selectedMode === 'Day Visit','Dispatch Ticket', 'Dispatch Pricing' && price !== null) {
+  if (selectedMode === 'Day Visit' || selectedMode ==='Dispatch Ticket' || selectedMode ==='Dispatch Pricing' && price !== null) {
     if (accessCancellationType === 'Access denied at the visit') {
       price *= 1;
     } else if (accessCancellationType === 'Visit cancelled within 24 hours') {
