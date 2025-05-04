@@ -19,6 +19,8 @@ function App() {
   const [visitDayType, setVisitDayType] = useState('');
   const [additionalKms, setAdditionalKms] = useState('');
   const [accessCancellationType, setAccessCancellationType] = useState('');
+  const [projectMonths, setProjectMonths] = useState('');
+
 
   const navigate = useNavigate();
 
@@ -73,14 +75,27 @@ function App() {
   let price = matchedRow && priceKey ? matchedRow[priceKey] : null;
   const currency = matchedRow?.Currency || '';
 
+  // Project monthly price multiplier logic
+if (selectedMode === 'Project' && price !== null && projectMonths) {
+  const months = parseInt(projectMonths, 10);
+  const validShort = termLength === 'Short Term' && months <= 3;
+  const validLong = termLength === 'Long Term' && months >= 6;
+  
+  if ((validShort || validLong) && !isNaN(months)) {
+    const multiplier = 1 + (0.05 * months); // 5% increase per month
+    price *= multiplier;
+  }
+}
+
+
   // Dispatch Ticket additional hours
-  if (selectedMode === 'Dispatch Ticket' && price !== null && additionalHours) {
+  if (selectedMode === 'Dispatch Ticket','Dispatch Ticket', 'Dispatch Pricing' && price !== null && additionalHours) {
     const hourlyRate = matchedRow?.DT_HourlyRate || 0;
     price += parseFloat(additionalHours || 0) * parseFloat(hourlyRate);
   }
 
   // Day Visit multiplier
-  if (selectedMode === 'Day Visit' && price !== null) {
+  if (selectedMode === 'Day Visit','Dispatch Ticket', 'Dispatch Pricing' && price !== null) {
     if (visitDayType === 'Weekday-Out of Hours') {
       price *= 1.5;
     } else if (visitDayType === 'Weekend') {
@@ -93,7 +108,7 @@ function App() {
   }
 
   // Day Visit multiplier
-  if (selectedMode === 'Day Visit' && price !== null) {
+  if (selectedMode === 'Day Visit','Dispatch Ticket', 'Dispatch Pricing' && price !== null) {
     if (accessCancellationType === 'Access denied at the visit') {
       price *= 1;
     } else if (accessCancellationType === 'Visit cancelled within 24 hours') {
@@ -128,6 +143,8 @@ function App() {
     setAdditionalHours('');
     setVisitDayType('');
     setAdditionalKms('');
+    setAccessCancellationType('');
+    setProjectMonths('');
   };
 
   const styles = {
@@ -294,9 +311,28 @@ function App() {
                 label="Term Length"
                 options={['Short Term', 'Long Term']}
                 value={termLength}
-                onChange={(e) => setTermLength(e.target.value)}
+                onChange={(e) => {
+                  setTermLength(e.target.value);
+                  setProjectMonths(''); // reset on change
+                }}
               />
             </div>
+
+            {termLength && (
+                <div style={styles.section}>
+                  <label>No of months of the project</label>
+                  <input
+                    type="number"
+                    min={termLength === 'Long Term' ? 6 : 1}
+                    max={termLength === 'Short Term' ? 3 : undefined}
+                    value={projectMonths}
+                    onChange={(e) => setProjectMonths(e.target.value)}
+                    placeholder={`Enter ${termLength === 'Short Term' ? 'up to 3' : '6 or more'} months`}
+                    style={styles.input}
+                  />
+                </div>
+              )}
+
           </>
         )}
 
@@ -349,6 +385,7 @@ function App() {
         )}
 
         {country && selectedMode === 'Dispatch Pricing' && (
+          <>
           <div style={styles.section}>
             <Dropdown
               label="No of BD Resolution to site"
@@ -357,6 +394,26 @@ function App() {
               onChange={(e) => setBdResolution(e.target.value)}
             />
           </div>
+          <div style={styles.section}>
+              <label>Additional traveled KM more than 50kms</label>
+              <input
+                type="number"
+                min="0"
+                placeholder="Enter additional kilometers"
+                value={additionalKms}
+                onChange={(e) => setAdditionalKms(e.target.value)}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.section}>
+              <Dropdown
+                label="Access Denied / Cancellation Incidents"
+                options={['Access denied at the visit', 'Visit cancelled within 24 hours']}
+                value={accessCancellationType}
+                onChange={(e) => setAccessCancellationType(e.target.value)}
+              />
+            </div>
+          </>
         )}
 
         {country && selectedMode === 'Dispatch Ticket' && (
@@ -384,6 +441,25 @@ function App() {
                 value={additionalHours}
                 onChange={(e) => setAdditionalHours(e.target.value)}
                 style={styles.input}
+              />
+            </div>
+            <div style={styles.section}>
+              <label>Additional traveled KM more than 50kms</label>
+              <input
+                type="number"
+                min="0"
+                placeholder="Enter additional kilometers"
+                value={additionalKms}
+                onChange={(e) => setAdditionalKms(e.target.value)}
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.section}>
+              <Dropdown
+                label="Access Denied / Cancellation Incidents"
+                options={['Access denied at the visit', 'Visit cancelled within 24 hours']}
+                value={accessCancellationType}
+                onChange={(e) => setAccessCancellationType(e.target.value)}
               />
             </div>
           </>
