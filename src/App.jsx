@@ -337,6 +337,7 @@ function App() {
             </div>
           </>
         )}
+        
 
         {price !== undefined && price !== null && (
           <>
